@@ -162,6 +162,9 @@ void dvbpsi_PushPacket(dvbpsi_handle h_dvbpsi, uint8_t* p_data)
 
   /* Continuity check */
   i_expected_counter = (h_dvbpsi->i_continuity_counter + 1) & 0xf;
+  /* Prevent bogus warnings when encountering the first continuity counter */
+  if ( h_dvbpsi->i_continuity_counter == 31 )
+    i_expected_counter = p_data[3] & 0xf;
   h_dvbpsi->i_continuity_counter = p_data[3] & 0xf;
 
   if(i_expected_counter == ((h_dvbpsi->i_continuity_counter + 1) & 0xf)
